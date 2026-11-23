@@ -1,5 +1,3 @@
-
-
 CREATE DATABASE IF NOT EXISTS monpet
   CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 USE monpet;
@@ -78,7 +76,6 @@ CREATE TABLE refugio (
     CONSTRAINT chk_refugio_capacidad CHECK (capacidad IS NULL OR capacidad >= 0)
 ) ENGINE=InnoDB;
 
-
 CREATE TABLE redes_sociales_refugio (
     red_social_id INT AUTO_INCREMENT PRIMARY KEY,
     nit VARCHAR(50) NOT NULL,
@@ -144,7 +141,6 @@ CREATE TABLE hogar_paso (
     CONSTRAINT chk_hogar_capacidad CHECK (capacidad IS NULL OR capacidad >= 0)
 ) ENGINE=InnoDB;
 
-
 CREATE TABLE hogar_paso_especie (
     hogar_paso_id INT NOT NULL,
     id_especie INT NOT NULL,
@@ -170,6 +166,14 @@ CREATE TABLE veterinario (
     nombre VARCHAR(100) NOT NULL,
     email VARCHAR(100),
     telefono VARCHAR(20),
+    ciudad VARCHAR(100),
+    foto VARCHAR(255),
+    sobre_mi TEXT,
+    titulo VARCHAR(120),
+    universidad VARCHAR(150),
+    horario_lv VARCHAR(100),
+    horario_sabado VARCHAR(100),
+    horario_domingo VARCHAR(100),
     tarjeta_profesional VARCHAR(50) UNIQUE
 ) ENGINE=InnoDB;
 
@@ -429,4 +433,3 @@ CREATE TABLE solicitud_archivo (
     CONSTRAINT fk_archivo_solicitud FOREIGN KEY (soli_adopcion_id)
       REFERENCES solicitud_adopcion(soli_adopcion_id) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB;
-
