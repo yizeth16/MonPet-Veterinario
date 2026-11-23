@@ -1,10 +1,50 @@
+<?php
+// 1. Incluir la conexión a la base de datos
+require_once '../database/conexion.php';
+
+// 2. Simulación de sesión (cuando hagas el login, esto vendrá de $_SESSION)
+$nombre_vet = "Dra. Laura Aroca";
+$nombre_corto = "Dra. Laura";
+$rol_vet = "Veterinaria";
+
+// 3. CONSULTAS PARA LAS 4 TARJETAS DE ESTADÍSTICAS (KPIs)
+// Contar mascotas en refugio
+$sql_mascotas = "SELECT COUNT(*) AS total FROM mascotas WHERE estado = 'En refugio'";
+$total_mascotas = $conexion->query($sql_mascotas)->fetch_assoc()['total'];
+
+// Contar citas próximas
+$sql_citas = "SELECT COUNT(*) AS total FROM citas WHERE fecha_hora >= NOW()";
+$total_citas = $conexion->query($sql_citas)->fetch_assoc()['total'];
+
+// Contar reportes médicos
+$sql_reportes = "SELECT COUNT(*) AS total FROM historial_salud";
+$total_reportes = $conexion->query($sql_reportes)->fetch_assoc()['total'];
+
+// Contar adopciones de este mes
+$sql_adopciones = "SELECT COUNT(*) AS total FROM adopciones WHERE MONTH(fecha) = MONTH(CURDATE())";
+$adopciones_mes = $conexion->query($sql_adopciones)->fetch_assoc()['total'];
+
+// 4. CONSULTA PARA LA TABLA DE PRÓXIMAS CITAS (Trae las 4 más cercanas)
+$sql_lista_citas = "SELECT c.id_cita, c.fecha_hora, c.motivo, m.nombre AS nombre_mascota, m.foto 
+                    FROM citas c 
+                    INNER JOIN mascotas m ON c.id_mascota = m.id_mascota 
+                    WHERE c.fecha_hora >= NOW() 
+                    ORDER BY c.fecha_hora ASC 
+                    LIMIT 4";
+$resultado_citas = $conexion->query($sql_lista_citas);
+
+// 5. CONSULTA PARA EL SELECT DEL FORMULARIO (Todas las mascotas)
+$sql_select_mascotas = "SELECT id_mascota, nombre, foto FROM mascotas ORDER BY nombre ASC";
+$resultado_mascotas = $conexion->query($sql_select_mascotas);
+?>
+
 <!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>MonPet - Panel Veterinario</title>
-    <link rel="stylesheet" href="../css/estilo_panel_veterinario.css">
+    <link rel="stylesheet" href="../assets/css/estilo_panel_veterinario.css">
 </head>
 <body>
 
@@ -151,7 +191,7 @@
                 <article class="tarjeta-estadistica">
                     <div class="icono-estadistica">🐾</div>
                     <div class="datos-estadistica">
-                        <span class="numero-estadistica"><!-- <?php echo $totalMascotas; ?> -->24</span>
+                        <span class="numero-estadistica"><?php echo $total_mascotas; ?></span>
                         <p class="etiqueta-estadistica">Mascotas en refugio</p>
                     </div>
                 </article>
@@ -160,7 +200,7 @@
                 <article class="tarjeta-estadistica">
                     <div class="icono-estadistica">📅</div>
                     <div class="datos-estadistica">
-                        <span class="numero-estadistica"><!-- <?php echo $totalCitas; ?> -->5</span>
+                        <span class="numero-estadistica"><?php echo $total_citas; ?></span>
                         <p class="etiqueta-estadistica">Citas proximas</p>
                     </div>
                 </article>
@@ -169,7 +209,7 @@
                 <article class="tarjeta-estadistica">
                     <div class="icono-estadistica">📄</div>
                     <div class="datos-estadistica">
-                        <span class="numero-estadistica"><!-- <?php echo $totalReportes; ?> -->8</span>
+                        <span class="numero-estadistica"><?php echo $total_reportes; ?></span>
                         <p class="etiqueta-estadistica">Reportes medicos</p>
                     </div>
                 </article>
@@ -178,7 +218,7 @@
                 <article class="tarjeta-estadistica">
                     <div class="icono-estadistica">🤍</div>
                     <div class="datos-estadistica">
-                        <span class="numero-estadistica"><!-- <?php echo $adopcionesMes; ?> -->12</span>
+                        <span class="numero-estadistica"><?php echo $adopciones_mes; ?></span>
                         <p class="etiqueta-estadistica">Adopciones este mes</p>
                     </div>
                 </article>

@@ -1,0 +1,672 @@
+@import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;500;600;700;800&family=Rancho&display=swap');
+
+:root {
+    --verde-oscuro: #216e66;       /* Barra lateral, banner principal y textos clave */
+    --verde-medio: #38887f;        /* Botones activos, cabeceras de tabla y etiquetas */
+    --verde-suave: #a6cfc8;        /* Fondos de tarjetas de estadísticas y pie de página */
+    --verde-claro-hover: #cbe3df;  /* Hover en elementos suaves */
+    --fondo-general: #f2f6f5;      /* Fondo gris-verdoso claro de la página */
+    --blanco: #ffffff;
+    --texto-principal: #1e423e;
+    --texto-secundario: #5a7874;
+    --borde-suave: #cde0dd;
+    --sombra-tarjeta: 0 4px 12px rgba(33, 110, 102, 0.08);
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    font-family: "Nunito", sans-serif;
+}
+
+body {
+    background-color: var(--fondo-general);
+    color: var(--texto-principal);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+a {
+    text-decoration: none;
+    color: inherit;
+}
+
+ul {
+    list-style: none;
+}
+
+/* 1. Barra superior (Encabezado) */
+.encabezado-superior {
+    background-color: var(--blanco);
+    height: 75px;
+    padding: 0 30px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: 1px solid var(--borde-suave);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+}
+
+/* Logotipo y eslogan */
+.marca-logo {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.icono-logo {
+    width: 45px;
+    height: 45px;
+    object-fit: contain;
+    background-color: var(--verde-oscuro);
+    border-radius: 50%;
+    padding: 6px;
+}
+
+.titulo-marca {
+    font-size: 1.5rem;
+    font-weight: 800;
+    color: var(--verde-oscuro);
+    display: block;
+    line-height: 1.1;
+}
+
+.eslogan-marca {
+    font-size: 0.85rem;
+    color: var(--texto-secundario);
+}
+
+/* Barra de búsqueda */
+.contenedor-buscador {
+    flex: 1;
+    max-width: 450px;
+    margin: 0 20px;
+}
+
+.formulario-busqueda {
+    display: flex;
+    align-items: center;
+    background-color: var(--blanco);
+    border: 1px solid var(--borde-suave);
+    border-radius: 20px;
+    padding: 8px 16px;
+    gap: 10px;
+}
+
+.campo-busqueda {
+    border: none;
+    outline: none;
+    width: 100%;
+    font-size: 0.9rem;
+    color: var(--texto-principal);
+}
+
+/* Acciones de usuario (Campana y Perfil) */
+.acciones-usuario {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+.boton-notificaciones {
+    background: none;
+    border: none;
+    font-size: 1.3rem;
+    cursor: pointer;
+    padding: 6px;
+    border-radius: 50%;
+    transition: background-color 0.2s;
+}
+
+.boton-notificaciones:hover {
+    background-color: var(--fondo-general);
+}
+
+.perfil-usuario {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    cursor: pointer;
+}
+
+.avatar-usuario {
+    width: 42px;
+    height: 42px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid var(--verde-suave);
+}
+
+.info-usuario {
+    display: flex;
+    flex-direction: column;
+}
+
+.nombre-usuario {
+    font-weight: 700;
+    font-size: 0.95rem;
+    color: var(--verde-oscuro);
+}
+
+.rol-usuario {
+    font-size: 0.8rem;
+    color: var(--texto-secundario);
+}
+
+/* =====================================================================
+   2. CONTENEDOR PRINCIPAL (SIDEBAR + CONTENIDO)
+   ===================================================================== */
+.contenedor-principal {
+    display: flex;
+    flex: 1;
+}
+
+/* 2.1 Menú Lateral Izquierdo */
+.barra-lateral {
+    width: 240px;
+    background-color: #dcebe8; /* Tono menta suave del menú lateral */
+    padding: 25px 15px;
+    border-right: 1px solid var(--borde-suave);
+    flex-shrink: 0;
+}
+
+.lista-menu {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.enlace-menu {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 12px 16px;
+    border-radius: 10px;
+    color: var(--verde-oscuro);
+    font-weight: 600;
+    font-size: 1rem;
+    transition: all 0.2s ease;
+}
+
+.enlace-menu:hover {
+    background-color: var(--verde-claro-hover);
+}
+
+/* Elemento activo del menú ("Inicio") */
+.item-menu.activo .enlace-menu {
+    background-color: var(--verde-oscuro);
+    color: var(--blanco);
+    box-shadow: 0 4px 8px rgba(33, 110, 102, 0.2);
+}
+
+/* 2.2 Área de Contenido Principal */
+.contenido-dashboard {
+    flex: 1;
+    padding: 25px 35px;
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+    max-width: 1400px;
+}
+
+/* =====================================================================
+   SECCIÓN A: BANNER DE BIENVENIDA
+   ===================================================================== */
+.banner-bienvenida {
+    background: linear-gradient(90deg, var(--verde-oscuro) 0%, #2d8279 100%);
+    border-radius: 16px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    overflow: hidden;
+    color: var(--blanco);
+    box-shadow: var(--sombra-tarjeta);
+    min-height: 175px;
+}
+
+.texto-bienvenida {
+    padding: 28px 35px;
+    max-width: 60%;
+}
+
+.titulo-bienvenida {
+    font-size: 1.9rem;
+    font-weight: 700;
+    margin-bottom: 8px;
+}
+
+.subtitulo-bienvenida {
+    font-size: 1rem;
+    opacity: 0.92;
+    margin-bottom: 18px;
+}
+
+.boton-actividades {
+    display: inline-block;
+    background-color: var(--verde-suave);
+    color: var(--verde-oscuro);
+    font-weight: 700;
+    font-size: 0.9rem;
+    padding: 9px 18px;
+    border-radius: 20px;
+    transition: background-color 0.2s;
+}
+
+.boton-actividades:hover {
+    background-color: var(--blanco);
+}
+
+.imagen-bienvenida {
+    width: 38%;
+    height: 185px;
+    align-self: stretch;
+}
+
+.foto-banner {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}
+
+/* =====================================================================
+   SECCIÓN B: TARJETAS DE ESTADÍSTICAS (KPIs)
+   ===================================================================== */
+.seccion-estadisticas {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 20px;
+}
+
+.tarjeta-estadistica {
+    background-color: var(--verde-suave);
+    border-radius: 14px;
+    padding: 18px 20px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    box-shadow: var(--sombra-tarjeta);
+    transition: transform 0.2s;
+}
+
+.tarjeta-estadistica:hover {
+    transform: translateY(-3px);
+}
+
+.icono-estadistica {
+    width: 52px;
+    height: 52px;
+    background-color: rgba(33, 110, 102, 0.25);
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.6rem;
+}
+
+.numero-estadistica {
+    font-size: 1.6rem;
+    font-weight: 800;
+    color: var(--verde-oscuro);
+    display: block;
+    line-height: 1.1;
+}
+
+.etiqueta-estadistica {
+    font-size: 0.88rem;
+    font-weight: 600;
+    color: var(--texto-principal);
+}
+
+/* =====================================================================
+   SECCIÓN C: FILA INTERMEDIA (TABLA DE CITAS + ACTUALIZACIONES)
+   ===================================================================== */
+.fila-intermedia {
+    display: grid;
+    grid-template-columns: 1.35fr 1fr;
+    gap: 24px;
+}
+
+/* Estilo base para los paneles blancos con borde */
+.tarjeta-panel {
+    background-color: var(--blanco);
+    border: 1px solid var(--borde-suave);
+    border-radius: 16px;
+    padding: 20px 24px;
+    box-shadow: var(--sombra-tarjeta);
+}
+
+.cabecera-panel {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 16px;
+}
+
+.titulo-panel {
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: var(--verde-oscuro);
+}
+
+.boton-ver-todas {
+    background-color: var(--verde-suave);
+    color: var(--verde-oscuro);
+    font-size: 0.82rem;
+    font-weight: 700;
+    padding: 6px 14px;
+    border-radius: 15px;
+    transition: background-color 0.2s;
+}
+
+.boton-ver-todas:hover {
+    background-color: var(--verde-medio);
+    color: var(--blanco);
+}
+
+/* Tabla de Próximas Citas */
+.tabla-citas {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.9rem;
+}
+
+.tabla-citas thead tr {
+    background-color: var(--verde-suave);
+    color: var(--verde-oscuro);
+    text-align: left;
+}
+
+.tabla-citas th {
+    padding: 10px 12px;
+    font-weight: 700;
+}
+
+.tabla-citas th:first-child { border-radius: 8px 0 0 8px; }
+.tabla-citas th:last-child { border-radius: 0 8px 8px 0; }
+
+.tabla-citas td {
+    padding: 10px 12px;
+    border-bottom: 1px solid #eef5f4;
+    vertical-align: middle;
+}
+
+.fecha-cita {
+    font-size: 0.82rem;
+    color: var(--texto-secundario);
+    font-weight: 600;
+}
+
+.celda-mascota {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-weight: 700;
+}
+
+.miniatura-mascota {
+    width: 34px;
+    height: 34px;
+    border-radius: 6px;
+    object-fit: cover;
+}
+
+.boton-ver {
+    display: inline-block;
+    background-color: var(--verde-medio);
+    color: var(--blanco);
+    font-size: 0.78rem;
+    font-weight: 600;
+    padding: 5px 12px;
+    border-radius: 12px;
+    transition: background-color 0.2s;
+}
+
+.boton-ver:hover {
+    background-color: var(--verde-oscuro);
+}
+
+/* Lista de Actualizaciones Recientes */
+.lista-actualizaciones {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+}
+
+.item-actualizacion {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid #eef5f4;
+}
+
+.item-actualizacion:last-child {
+    border-bottom: none;
+    padding-bottom: 0;
+}
+
+.miniatura-actualizacion {
+    width: 44px;
+    height: 44px;
+    border-radius: 8px;
+    object-fit: cover;
+}
+
+.detalle-actualizacion {
+    flex: 1;
+}
+
+.texto-actualizacion {
+    font-size: 0.9rem;
+    font-weight: 700;
+    color: var(--texto-principal);
+}
+
+.tiempo-actualizacion {
+    font-size: 0.78rem;
+    color: var(--texto-secundario);
+}
+
+/* Etiquetas de categoría ("Salud" y "Refugio") */
+.etiqueta-categoria {
+    font-size: 0.78rem;
+    font-weight: 700;
+    padding: 5px 14px;
+    border-radius: 14px;
+}
+
+.etiqueta-salud {
+    background-color: var(--verde-medio);
+    color: var(--blanco);
+}
+
+.etiqueta-refugio {
+    background-color: var(--verde-suave);
+    color: var(--verde-oscuro);
+}
+
+/* =====================================================================
+   SECCIÓN D: FORMULARIO INFERIOR (ACTUALIZAR SALUD DE MASCOTA)
+   ===================================================================== */
+.titulo-formulario {
+    text-align: center;
+    font-size: 1.3rem;
+    color: var(--verde-oscuro);
+    margin-bottom: 20px;
+}
+
+.formulario-salud {
+    display: grid;
+    grid-template-columns: 200px 1fr 1fr;
+    gap: 24px;
+    align-items: start;
+}
+
+/* Columna 1: Foto grande */
+.columna-foto-mascota {
+    width: 100%;
+    height: 210px;
+    border-radius: 14px;
+    overflow: hidden;
+    border: 2px solid var(--borde-suave);
+}
+
+.foto-mascota-seleccionada {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+/* Columnas 2 y 3: Campos de formulario */
+.columna-campos-principales,
+.columna-campos-estado {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+}
+
+.grupo-campo {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.etiqueta-campo {
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: var(--verde-oscuro);
+}
+
+.selector-campo,
+.area-texto {
+    width: 100%;
+    padding: 10px 14px;
+    border: 1px solid var(--borde-suave);
+    border-radius: 10px;
+    font-size: 0.9rem;
+    color: var(--texto-principal);
+    background-color: var(--blanco);
+    outline: none;
+    transition: border-color 0.2s;
+}
+
+.selector-campo:focus,
+.area-texto:focus {
+    border-color: var(--verde-medio);
+}
+
+.area-texto {
+    resize: vertical;
+}
+
+/* Checkboxes de condiciones especiales */
+.lista-checkbox {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-top: 4px;
+}
+
+.opcion-checkbox {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 0.9rem;
+    color: var(--texto-secundario);
+    cursor: pointer;
+}
+
+.opcion-checkbox input[type="checkbox"] {
+    width: 18px;
+    height: 18px;
+    accent-color: var(--verde-oscuro);
+    cursor: pointer;
+}
+
+/* Botón Guardar Actualización (ocupa las 3 columnas abajo) */
+.contenedor-boton-guardar {
+    grid-column: 1 / -1;
+    display: flex;
+    justify-content: center;
+    margin-top: 6px;
+}
+
+.boton-guardar {
+    background-color: var(--verde-medio);
+    color: var(--blanco);
+    border: none;
+    padding: 11px 36px;
+    border-radius: 20px;
+    font-size: 1rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: background-color 0.2s, transform 0.1s;
+}
+
+.boton-guardar:hover {
+    background-color: var(--verde-oscuro);
+    transform: scale(1.02);
+}
+
+/* =====================================================================
+   3. PIE DE PÁGINA (FOOTER)
+   ===================================================================== */
+.pie-pagina {
+    background-color: var(--verde-suave);
+    height: 65px;
+    margin-top: auto;
+    border-top: 1px solid var(--borde-suave);
+}
+
+/* =====================================================================
+   DISEÑO RESPONSIVO (PANTALLAS MEDIANAS Y MÓVILES)
+   ===================================================================== */
+@media (max-width: 1024px) {
+    .seccion-estadisticas {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .fila-intermedia {
+        grid-template-columns: 1fr;
+    }
+
+    .formulario-salud {
+        grid-template-columns: 1fr;
+    }
+
+    .columna-foto-mascota {
+        max-width: 220px;
+        margin: 0 auto;
+    }
+}
+
+@media (max-width: 768px) {
+    .contenedor-principal {
+        flex-direction: column;
+    }
+
+    .barra-lateral {
+        width: 100%;
+        padding: 12px;
+    }
+
+    .lista-menu {
+        flex-direction: row;
+        overflow-x: auto;
+    }
+
+    .banner-bienvenida {
+        flex-direction: column;
+    }
+
+    .texto-bienvenida,
+    .imagen-bienvenida {
+        max-width: 100%;
+        width: 100%;
+    } }  
