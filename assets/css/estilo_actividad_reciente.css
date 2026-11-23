@@ -1,0 +1,478 @@
+@import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;500;600;700;800&family=Rancho&display=swap');
+
+:root {
+    --verde-oscuro: #216e66;       /* Barra lateral, banner principal y textos clave */
+    --verde-medio: #38887f;        /* Botones activos, cabeceras de tabla y etiquetas */
+    --verde-suave: #a6cfc8;        /* Fondos de tarjetas de estadísticas y pie de página */
+    --verde-claro-hover: #cbe3df;  /* Hover en elementos suaves */
+    --fondo-general: #f2f6f5;      /* Fondo gris-verdoso claro de la página */
+    --blanco: #ffffff;
+    --texto-principal: #1e423e;
+    --texto-secundario: #5a7874;
+    --borde-suave: #cde0dd;
+    --sombra-tarjeta: 0 4px 12px rgba(33, 110, 102, 0.08);
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    font-family: "Nunito", sans-serif;
+}
+
+body {
+    background-color: var(--fondo-general);
+    color: var(--texto-principal);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+a {
+    text-decoration: none;
+    color: inherit;
+}
+
+/* =====================================================================
+   1. BARRA SUPERIOR (ENCABEZADO)
+   ===================================================================== */
+.encabezado-superior {
+    background-color: var(--verde-suave);
+    height: 75px;
+    padding: 0 30px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: 1px solid var(--borde-suave);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+}
+
+.marca-logo {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.icono-logo {
+    width: 45px;
+    height: 45px;
+    object-fit: contain;
+    background-color: var(--verde-oscuro);
+    border-radius: 50%;
+    padding: 6px;
+}
+
+.titulo-marca {
+    font-size: 1.5rem;
+    font-weight: 800;
+    color: var(--verde-oscuro);
+    display: block;
+    line-height: 1.1;
+}
+
+.eslogan-marca {
+    font-size: 0.85rem;
+    color: var(--texto-principal);
+}
+
+.contenedor-buscador {
+    flex: 1;
+    max-width: 420px;
+    margin: 0 20px;
+}
+
+.formulario-busqueda {
+    display: flex;
+    align-items: center;
+    background-color: var(--blanco);
+    border: 1px solid var(--borde-suave);
+    border-radius: 20px;
+    padding: 7px 16px;
+    gap: 10px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+}
+
+.campo-busqueda {
+    border: none;
+    outline: none;
+    width: 100%;
+    font-size: 0.9rem;
+    color: var(--texto-principal);
+}
+
+.acciones-superiores {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+}
+
+.boton-notificaciones {
+    background-color: var(--blanco);
+    border: none;
+    font-size: 1.1rem;
+    cursor: pointer;
+    width: 36px;
+    height: 36px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.separador-vertical {
+    width: 1px;
+    height: 40px;
+    background-color: var(--verde-medio);
+    opacity: 0.4;
+}
+
+.boton-volver {
+    background-color: var(--verde-medio);
+    color: var(--blanco);
+    font-weight: 600;
+    font-size: 0.92rem;
+    padding: 9px 18px;
+    border-radius: 10px;
+    transition: background-color 0.2s;
+}
+
+.boton-volver:hover {
+    background-color: var(--verde-oscuro);
+}
+
+/* =====================================================================
+   2. CONTENEDOR PRINCIPAL
+   ===================================================================== */
+.contenedor-actividad {
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 28px 25px;
+    display: flex;
+    flex-direction: column;
+    gap: 22px;
+    flex: 1;
+}
+
+/* =====================================================================
+   SECCIÓN A: BANNER SUPERIOR
+   ===================================================================== */
+.banner-actividad {
+    background-color: var(--verde-medio);
+    border-radius: 16px;
+    padding: 26px 40px;
+    display: flex;
+    align-items: center;
+    gap: 35px;
+    color: var(--blanco);
+    box-shadow: var(--sombra-tarjeta);
+}
+
+.icono-portapapeles {
+    font-size: 4.5rem;
+    background-color: rgba(255, 255, 255, 0.15);
+    padding: 16px 22px;
+    border-radius: 18px;
+    border: 2px solid rgba(255, 255, 255, 0.3);
+}
+
+.titulo-banner {
+    font-size: 2.2rem;
+    font-weight: 700;
+    margin-bottom: 8px;
+}
+
+.subtitulo-banner {
+    font-size: 1.05rem;
+    opacity: 0.95;
+}
+
+/* =====================================================================
+   SECCIÓN B: BARRA DE FILTROS
+   ===================================================================== */
+.barra-filtros {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 14px;
+}
+
+.grupo-selectores {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 14px;
+}
+
+.caja-filtro {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background-color: var(--blanco);
+    border: 1px solid var(--borde-suave);
+    border-radius: 22px;
+    padding: 8px 16px;
+    color: var(--verde-medio);
+    font-weight: 600;
+}
+
+/* Estilo verde relleno cuando un filtro está activo */
+.caja-filtro.filtro-activo {
+    background-color: var(--verde-suave);
+    border-color: var(--verde-medio);
+    color: var(--verde-oscuro);
+}
+
+.select-filtro {
+    border: none;
+    background: transparent;
+    outline: none;
+    font-size: 0.92rem;
+    font-weight: 600;
+    color: inherit;
+    cursor: pointer;
+}
+
+.boton-limpiar {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background-color: var(--blanco);
+    border: 1px solid var(--borde-suave);
+    color: var(--verde-medio);
+    font-weight: 600;
+    font-size: 0.92rem;
+    padding: 9px 18px;
+    border-radius: 10px;
+    transition: all 0.2s;
+}
+
+.boton-limpiar:hover {
+    background-color: var(--verde-suave);
+    color: var(--verde-oscuro);
+}
+
+/* =====================================================================
+   SECCIÓN C: CUADRÍCULA (RESUMEN IZQUIERDO + TIMELINE DERECHO)
+   ===================================================================== */
+.cuadricula-contenido {
+    display: grid;
+    grid-template-columns: 310px 1fr;
+    gap: 24px;
+    align-items: start;
+}
+
+/* COLUMNA IZQUIERDA: Resumen de actividad */
+.panel-resumen {
+    background-color: var(--blanco);
+    border: 1px solid var(--borde-suave);
+    border-radius: 14px;
+    padding: 20px;
+    box-shadow: var(--sombra-tarjeta);
+}
+
+.titulo-resumen {
+    font-size: 1.15rem;
+    font-weight: 700;
+    color: var(--verde-oscuro);
+    margin-bottom: 16px;
+    text-align: center;
+}
+
+.lista-tarjetas-resumen {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.tarjeta-resumen {
+    background-color: var(--verde-caja-resumen);
+    border-radius: 10px;
+    padding: 14px 16px;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+}
+
+.icono-resumen {
+    font-size: 1.8rem;
+    width: 40px;
+    text-align: center;
+    color: var(--verde-medio);
+}
+
+.numero-resumen {
+    font-size: 1.35rem;
+    font-weight: 800;
+    color: var(--texto-principal);
+    display: block;
+    line-height: 1.1;
+}
+
+.etiqueta-resumen {
+    font-size: 0.8rem;
+    color: var(--texto-secundario);
+    font-weight: 600;
+}
+
+/* Tarjeta inferior "¡Buen trabajo!" */
+.tarjeta-felicitacion {
+    background-color: #bfe0da;
+    border: 1px solid var(--verde-suave);
+}
+
+.titulo-felicitacion {
+    font-size: 1rem;
+    font-weight: 800;
+    color: var(--verde-oscuro);
+    display: block;
+}
+
+/* COLUMNA DERECHA: Panel de Línea de Tiempo */
+.panel-linea-tiempo {
+    background-color: var(--blanco);
+    border: 1px solid var(--borde-suave);
+    border-radius: 14px;
+    padding: 24px 28px;
+    box-shadow: var(--sombra-tarjeta);
+}
+
+.contenedor-timeline {
+    position: relative;
+    padding-left: 32px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+/* Línea vertical que une todos los puntos */
+.contenedor-timeline::before {
+    content: "";
+    position: absolute;
+    left: 7px;
+    top: 22px;
+    bottom: 22px;
+    width: 2px;
+    background-color: var(--verde-suave);
+}
+
+.item-timeline {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+/* Punto circular hueco en la línea de tiempo */
+.punto-timeline {
+    position: absolute;
+    left: -32px;
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    background-color: var(--blanco);
+    border: 3px solid var(--verde-medio);
+    z-index: 2;
+}
+
+/* Tarjeta horizontal de cada evento */
+.tarjeta-evento {
+    flex: 1;
+    background-color: var(--blanco);
+    border: 1.5px solid var(--borde-suave);
+    border-radius: 12px;
+    padding: 14px 18px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    box-shadow: 0 2px 6px rgba(33, 110, 102, 0.05);
+    transition: transform 0.15s, border-color 0.15s;
+}
+
+.tarjeta-evento:hover {
+    transform: translateX(4px);
+    border-color: var(--verde-medio);
+}
+
+.icono-evento {
+    width: 44px;
+    height: 44px;
+    background-color: #e4f1ef;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.4rem;
+    flex-shrink: 0;
+}
+
+.detalle-evento {
+    flex: 1;
+}
+
+.titulo-evento {
+    font-size: 1.02rem;
+    font-weight: 700;
+    color: var(--verde-medio);
+    margin-bottom: 2px;
+}
+
+.descripcion-evento {
+    font-size: 0.86rem;
+    color: var(--texto-principal);
+}
+
+/* Etiqueta central ("Salud", "Jornada", etc.) */
+.etiqueta-tipo-evento {
+    background-color: var(--verde-etiqueta);
+    color: var(--verde-oscuro);
+    font-size: 0.78rem;
+    font-weight: 700;
+    padding: 4px 14px;
+    border-radius: 14px;
+    min-width: 90px;
+    text-align: center;
+}
+
+/* Cajita derecha de fecha y hora */
+.fecha-evento {
+    background-color: var(--blanco);
+    border: 1px solid var(--borde-suave);
+    color: var(--texto-secundario);
+    font-size: 0.75rem;
+    font-weight: 600;
+    padding: 5px 12px;
+    border-radius: 6px;
+    white-space: nowrap;
+}
+
+.mensaje-vacio {
+    text-align: center;
+    color: var(--texto-secundario);
+    padding: 30px;
+    font-weight: 600;
+}
+
+/* =====================================================================
+   3. PIE DE PÁGINA
+   ===================================================================== */
+.pie-pagina {
+    background-color: var(--verde-suave);
+    height: 80px;
+    margin-top: auto;
+}
+
+/* =====================================================================
+   RESPONSIVO
+   ===================================================================== */
+@media (max-width: 960px) {
+    .cuadricula-contenido {
+        grid-template-columns: 1fr;
+    }
+
+    .tarjeta-evento {
+        flex-wrap: wrap;
+    }
+}
