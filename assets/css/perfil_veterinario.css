@@ -75,14 +75,15 @@ body {
     color: var(--texto-secundario);
 }
 
-.btn-volver{
+.btn-volver,
+.btn-configuracion {
         display: inline-flex;
     align-items: center;
     justify-content: center;
     gap: 6px;
     text-decoration: none;
     font-weight: 600;
-    font-size: 1.2rem;
+    font-size: 0.9rem;
     border-radius: 10px;
     transition: background-color 0.2s ease, transform 0.15s ease;
 }
@@ -99,14 +100,16 @@ body {
     transition: background-color 0.2s ease, transform 0.15s ease;
 }
 
-.btn-volver {
+.btn-volver,
+.btn-configuracion {
     background-color: var(--fondo-general);
     color: var(--texto-principal);
     border: 1px solid var(--borde-suave);
     padding: 8px 14px;
 }
 
-.btn-volver:hover {
+.btn-volver:hover,
+.btn-configuracion:hover {
     background-color: var(--verde-claro-hover);
 }
 

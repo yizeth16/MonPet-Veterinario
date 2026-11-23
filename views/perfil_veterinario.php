@@ -32,9 +32,11 @@ function e($valor, $fallback = 'No disponible') {
             </div>
         </div>
 
-        <a href="panel_veterinario.php" class="btn-volver">
-            <i class="fa-solid fa-arrow-left"></i> Volver al inicio
-        </a>
+        <div class="acciones-topbar">
+            <a href="panel_veterinario.php" class="btn-volver">
+                <i class="fa-solid fa-arrow-left" aria-hidden="true"></i> Volver al inicio
+            </a>
+        </div>
     </header>
 
     <main class="perfil-container">
@@ -122,6 +124,9 @@ function e($valor, $fallback = 'No disponible') {
                     <p><i class="fa-regular fa-folder-open"></i> No hay consultas recientes registradas aún.</p>
                 <?php endif; ?>
             </article>
+             <a href="configuracion.php" class="btn-configuracion">
+                <i class="fa-solid fa-gear" aria-hidden="true"></i> Configuración
+            </a>
         </section>
     </main>
 </body>
