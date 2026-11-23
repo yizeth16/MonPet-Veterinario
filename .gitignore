@@ -1,0 +1,16 @@
+# Ignorar la conexión real con credenciales locales
+configuracion/conexion.php
+
+# Archivos de entorno y configuración local
+.env
+*.local.php
+
+# Archivos del sistema operativo y editores
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+
+# Logs o archivos temporales
+*.log
+*.tmp
