@@ -2,7 +2,7 @@
 // =========================================================================
 // 1. CONEXIÓN A LA BASE DE DATOS
 // =========================================================================
-require_once '../database/conexion.php';
+require_once '../configuracion/conexion_ejemplo.php';
 
 // =========================================================================
 // 2. CAPTURAR FILTROS DESDE LA URL (GET)
@@ -11,9 +11,8 @@ require_once '../database/conexion.php';
 $filtro_dias = isset($_GET['dias']) ? $_GET['dias'] : 'todos';
 $filtro_tipo = isset($_GET['tipo']) ? $_GET['tipo'] : 'todos';
 
-// Construimos las condiciones WHERE dinámicamente según los filtros elegidos
+// Construimos las condiciones WHERE dinamicamente segun los filtros elegidos
 $condiciones = [];
-
 if ($filtro_dias === '7') {
     $condiciones[] = "fecha_evento >= DATE_SUB(NOW(), INTERVAL 7 DAY)";
 } elseif ($filtro_dias === '30') {
@@ -21,41 +20,58 @@ if ($filtro_dias === '7') {
 }
 
 if ($filtro_tipo !== 'todos' && $filtro_tipo !== '') {
-    // Escapamos el texto por seguridad antes de meterlo al SQL
-    $tipo_seguro = $conexion->real_escape_string($filtro_tipo);
+    $tipo_seguro = $conn->real_escape_string($filtro_tipo);
     $condiciones[] = "categoria = '$tipo_seguro'";
 }
 
-// Unimos las condiciones con AND si existe alguna
-$where_sql = "";
-if (count($condiciones) > 0) {
-    $where_sql = "WHERE " . implode(" AND ", $condiciones);
-}
+$where_sql = count($condiciones) > 0 ? 'WHERE ' . implode(' AND ', $condiciones) : '';
 
-// =========================================================================
-// 3. CONSULTA DE LA LÍNEA DE TIEMPO (TIMELINE)
-// =========================================================================
-$sql_eventos = "SELECT * FROM actividad_reciente $where_sql ORDER BY fecha_evento DESC";
-$resultado_eventos = $conexion->query($sql_eventos);
+// La actividad se construye con registros disponibles en el esquema del proyecto.
+$sql_eventos = "SELECT * FROM (
+    SELECT 'Salud' AS categoria,
+           CONCAT('Consulta veterinaria de ', m.nombre) AS titulo,
+           COALESCE(NULLIF(c.diagnostico, ''), NULLIF(c.observaciones, ''), 'Consulta veterinaria registrada') AS descripcion,
+           c.fecha_consulta AS fecha_evento
+    FROM consulta_veterinaria c
+    INNER JOIN mascota m ON c.mascota_id = m.mascota_id
+    UNION ALL
+    SELECT 'Mascota' AS categoria,
+           CONCAT('Ingreso de mascota: ', m.nombre) AS titulo,
+           COALESCE(NULLIF(m.descripcion, ''), 'Mascota registrada en el refugio') AS descripcion,
+           CAST(m.fecha_ingreso AS DATETIME) AS fecha_evento
+    FROM mascota m
+    WHERE m.fecha_ingreso IS NOT NULL
+    UNION ALL
+    SELECT 'Adopcion' AS categoria,
+           'Solicitud de adopcion' AS titulo,
+           CONCAT('Estado: ', s.estado) AS descripcion,
+           s.fecha_solicitud AS fecha_evento
+    FROM solicitud_adopcion s
+    UNION ALL
+    SELECT 'Aporte' AS categoria,
+           'Aporte voluntario registrado' AS titulo,
+           CONCAT('Cantidad: ', a.cantidad) AS descripcion,
+           CAST(a.fecha_aporte AS DATETIME) AS fecha_evento
+    FROM aporte_voluntario a
+    WHERE a.fecha_aporte IS NOT NULL
+) AS eventos $where_sql
+ORDER BY fecha_evento DESC";
+$resultado_eventos = $conn->query($sql_eventos);
 
-// =========================================================================
-// 4. CONSULTAS PARA LA COLUMNA IZQUIERDA ("RESUMEN DE ACTIVIDAD")
-// =========================================================================
-$total_mascotas = $conexion->query("SELECT COUNT(*) AS total FROM mascotas")->fetch_assoc()['total'];
-$total_jornadas = $conexion->query("SELECT COUNT(*) AS total FROM actividad_reciente WHERE categoria IN ('Jornada', 'Campaña')")->fetch_assoc()['total'];
-$total_reportes = $conexion->query("SELECT COUNT(*) AS total FROM historial_salud")->fetch_assoc()['total'];
-$total_notificaciones = $conexion->query("SELECT COUNT(*) AS total FROM actividad_reciente WHERE categoria = 'Notificación'")->fetch_assoc()['total'];
-
-// Función auxiliar para asignar el emoji/icono según la categoría del evento
+// Resumen basado en tablas definidas en monpet.sql
+$total_mascotas = $conn->query("SELECT COUNT(DISTINCT mascota_id) AS total FROM consulta_veterinaria")->fetch_assoc()['total'];
+$total_solicitudes = $conn->query("SELECT COUNT(*) AS total FROM solicitud_adopcion")->fetch_assoc()['total'];
+$total_consultas = $conn->query("SELECT COUNT(*) AS total FROM consulta_veterinaria")->fetch_assoc()['total'];
+$total_aportes = $conn->query("SELECT COUNT(*) AS total FROM aporte_voluntario")->fetch_assoc()['total'];
 function obtenerIconoCategoria($categoria) {
     switch ($categoria) {
-        case 'Salud':        return '➕';
-        case 'Jornada':      return '📅';
-        case 'Mascota':      return '🐾';
-        case 'Notificación': return '🔔';
-        case 'Reporte':      return '📡';
-        case 'Campaña':      return '✅';
-        default:             return '📋';
+        case 'Salud':        return '<i class="fa-solid fa-square-plus"></i>';
+        case 'Jornada':      return '<i class="fa-solid fa-calendar-days"></i>';
+        case 'Mascota':      return '<i class="fa-solid fa-paw"></i>';
+        case 'Notificación': return '<i class="fa-solid fa-bell"></i>';
+        case 'Reporte':      return '<i class="fa-solid fa-chart-line"></i>';
+        case 'Campaña':      return '<i class="fa-solid fa-flag"></i>';
+        default:             return '<i class="fa-solid fa-list"></i>';
     }
 }
 ?>
@@ -66,6 +82,7 @@ function obtenerIconoCategoria($categoria) {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>MonPet - Actividad Reciente</title>
     <link rel="stylesheet" href="../assets/css/estilo_actividad_reciente.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
 </head>
 <body>
 
@@ -83,13 +100,17 @@ function obtenerIconoCategoria($categoria) {
 
         <div class="contenedor-buscador">
             <form action="../buscar.php" method="GET" class="formulario-busqueda">
-                <span class="icono-buscar">🔍</span>
+                <span class="icono-buscar">
+                    <i class="fa-solid fa-magnifying-glass"></i>
+                </span>
                 <input type="search" name="busqueda" class="campo-busqueda" placeholder="Buscar mascota, historia o refugio...">
             </form>
         </div>
 
         <div class="acciones-superiores">
-            <button type="button" class="boton-notificaciones" aria-label="Notificaciones">🔔</button>
+            <button type="button" class="boton-notificaciones" aria-label="Notificaciones">
+                <i class="fa-solid fa-bell"></i>
+            </button>
             <div class="separador-vertical"></div>
             <a href="panel_veterinario.php" class="boton-volver">← Volver al inicio</a>
         </div>
@@ -105,7 +126,10 @@ function obtenerIconoCategoria($categoria) {
         <section class="banner-actividad">
             <div class="ilustracion-banner">
                 <!-- Puedes reemplazar este bloque por <img src="../img/portapapeles-huella.png"> -->
-                <div class="icono-portapapeles">📋🐾</div>
+                <div class="icono-portapapeles">
+                    <i class="fa-solid fa-clipboard-list"></i>
+                    <i class="fa-solid fa-paw"></i>
+                </div>
             </div>
             <div class="texto-banner">
                 <h1 class="titulo-banner">Actividad reciente</h1>
@@ -120,7 +144,7 @@ function obtenerIconoCategoria($categoria) {
             <div class="grupo-selectores">
                 <!-- Filtro 1: Últimos 7 días -->
                 <div class="caja-filtro <?php echo ($filtro_dias == '7') ? 'filtro-activo' : ''; ?>">
-                    <span>📅</span>
+                    <span><i class="fa-solid fa-calendar-days"></i></span>
                     <select name="dias" onchange="document.getElementById('form-filtros').submit()" class="select-filtro">
                         <option value="todos" <?php echo ($filtro_dias == 'todos') ? 'selected' : ''; ?>>Todos los tiempos</option>
                         <option value="7" <?php echo ($filtro_dias == '7') ? 'selected' : ''; ?>>Últimos 7 días</option>
@@ -130,22 +154,20 @@ function obtenerIconoCategoria($categoria) {
 
                 <!-- Filtro 2: Tipo de evento -->
                 <div class="caja-filtro <?php echo ($filtro_tipo != 'todos') ? 'filtro-activo' : ''; ?>">
-                    <span>🏷️</span>
+                    <span><i class="fa-solid fa-tag"></i></span>
                     <select name="tipo" onchange="document.getElementById('form-filtros').submit()" class="select-filtro">
                         <option value="todos" <?php echo ($filtro_tipo == 'todos') ? 'selected' : ''; ?>>Todos los eventos</option>
                         <option value="Salud" <?php echo ($filtro_tipo == 'Salud') ? 'selected' : ''; ?>>Salud</option>
-                        <option value="Jornada" <?php echo ($filtro_tipo == 'Jornada') ? 'selected' : ''; ?>>Jornada</option>
                         <option value="Mascota" <?php echo ($filtro_tipo == 'Mascota') ? 'selected' : ''; ?>>Mascota</option>
-                        <option value="Notificación" <?php echo ($filtro_tipo == 'Notificación') ? 'selected' : ''; ?>>Notificación</option>
-                        <option value="Reporte" <?php echo ($filtro_tipo == 'Reporte') ? 'selected' : ''; ?>>Reporte</option>
-                        <option value="Campaña" <?php echo ($filtro_tipo == 'Campaña') ? 'selected' : ''; ?>>Campaña</option>
+                        <option value="Adopcion" <?php echo ($filtro_tipo == 'Adopcion') ? 'selected' : ''; ?>>Adopci&oacute;n</option>
+                        <option value="Aporte" <?php echo ($filtro_tipo == 'Aporte') ? 'selected' : ''; ?>>Aporte</option>
                     </select>
                 </div>
             </div>
 
             <!-- Botón Limpiar filtros (recarga la página sin parámetros GET) -->
             <a href="actividad_reciente.php" class="boton-limpiar">
-                🗑️ Limpiar filtros
+                <i class="fa-solid fa-trash-can"></i> Limpiar filtros
             </a>
         </form>
 
@@ -155,12 +177,14 @@ function obtenerIconoCategoria($categoria) {
 
             <!-- COLUMNA IZQUIERDA: Resumen de actividad -->
             <aside class="panel-resumen">
-                <h2 class="titulo-resumen">📊 Resumen de actividad</h2>
+                <h2 class="titulo-resumen"><i class="fa-solid fa-chart-line"></i> Resumen de actividad</h2>
 
                 <div class="lista-tarjetas-resumen">
                     <!-- Tarjeta 1 -->
                     <div class="tarjeta-resumen">
-                        <div class="icono-resumen">🐾</div>
+                        <div class="icono-resumen">
+                            <i class="fa-solid fa-paw"></i>
+                        </div>
                         <div class="datos-resumen">
                             <span class="numero-resumen"><?php echo $total_mascotas; ?></span>
                             <p class="etiqueta-resumen">Mascotas atendidas</p>
@@ -169,34 +193,42 @@ function obtenerIconoCategoria($categoria) {
 
                     <!-- Tarjeta 2 -->
                     <div class="tarjeta-resumen">
-                        <div class="icono-resumen">📅</div>
+                        <div class="icono-resumen">
+                            <i class="fa-solid fa-calendar-days"></i>
+                        </div>
                         <div class="datos-resumen">
-                            <span class="numero-resumen"><?php echo $total_jornadas; ?></span>
-                            <p class="etiqueta-resumen">Jornadas y campañas</p>
+                            <span class="numero-resumen"><?php echo $total_solicitudes; ?></span>
+                            <p class="etiqueta-resumen">Solicitudes de adopci&oacute;n</p>
                         </div>
                     </div>
 
                     <!-- Tarjeta 3 -->
                     <div class="tarjeta-resumen">
-                        <div class="icono-resumen">➕</div>
+                        <div class="icono-resumen">
+                            <i class="fa-solid fa-plus"></i>
+                        </div>
                         <div class="datos-resumen">
-                            <span class="numero-resumen"><?php echo $total_reportes; ?></span>
-                            <p class="etiqueta-resumen">Reportes médicos</p>
+                            <span class="numero-resumen"><?php echo $total_consultas; ?></span>
+                            <p class="etiqueta-resumen">Consultas m&eacute;dicas</p>
                         </div>
                     </div>
 
                     <!-- Tarjeta 4 -->
                     <div class="tarjeta-resumen">
-                        <div class="icono-resumen">🔔</div>
+                        <div class="icono-resumen">
+                            <i class="fa-solid fa-bell"></i>
+                        </div>
                         <div class="datos-resumen">
-                            <span class="numero-resumen"><?php echo $total_notificaciones; ?></span>
-                            <p class="etiqueta-resumen">Notificaciones</p>
+                            <span class="numero-resumen"><?php echo $total_aportes; ?></span>
+                            <p class="etiqueta-resumen">Aportes voluntarios</p>
                         </div>
                     </div>
 
                     <!-- Tarjeta 5: Motivacional -->
                     <div class="tarjeta-resumen tarjeta-felicitacion">
-                        <div class="icono-resumen">👍</div>
+                        <div class="icono-resumen">
+                            <i class="fa-solid fa-thumbs-up"></i>
+                        </div>
                         <div class="datos-resumen">
                             <span class="titulo-felicitacion">¡Buen trabajo!</span>
                             <p class="etiqueta-resumen">Sigues cuidando a las mascotas de MonPet</p>

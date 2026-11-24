@@ -1,41 +1,41 @@
 <?php
-// 1. Incluir la conexión a la base de datos
-require_once '../database/conexion.php';
+// 1. Incluir la conexión real a la base de datos
+require_once '../configuracion/conexion_ejemplo.php';
 
-// 2. Simulación de sesión (cuando hagas el login, esto vendrá de $_SESSION)
+// 2. Simulación de sesión
 $nombre_vet = "Dra. Laura Aroca";
 $nombre_corto = "Dra. Laura";
 $rol_vet = "Veterinaria";
 
 // 3. CONSULTAS PARA LAS 4 TARJETAS DE ESTADÍSTICAS (KPIs)
 // Contar mascotas en refugio
-$sql_mascotas = "SELECT COUNT(*) AS total FROM mascotas WHERE estado = 'En refugio'";
-$total_mascotas = $conexion->query($sql_mascotas)->fetch_assoc()['total'];
+$sql_mascotas = "SELECT COUNT(*) AS total FROM mascota WHERE estado = 'En refugio'";
+$total_mascotas = $conn->query($sql_mascotas)->fetch_assoc()['total'];
 
 // Contar citas próximas
-$sql_citas = "SELECT COUNT(*) AS total FROM citas WHERE fecha_hora >= NOW()";
-$total_citas = $conexion->query($sql_citas)->fetch_assoc()['total'];
+$sql_citas = "SELECT COUNT(*) AS total FROM consulta_veterinaria WHERE fecha_consulta >= NOW()";
+$total_citas = $conn->query($sql_citas)->fetch_assoc()['total'];
 
 // Contar reportes médicos
-$sql_reportes = "SELECT COUNT(*) AS total FROM historial_salud";
-$total_reportes = $conexion->query($sql_reportes)->fetch_assoc()['total'];
+$sql_reportes = "SELECT COUNT(*) AS total FROM consulta_veterinaria";
+$total_reportes = $conn->query($sql_reportes)->fetch_assoc()['total'];
 
 // Contar adopciones de este mes
-$sql_adopciones = "SELECT COUNT(*) AS total FROM adopciones WHERE MONTH(fecha) = MONTH(CURDATE())";
-$adopciones_mes = $conexion->query($sql_adopciones)->fetch_assoc()['total'];
+$sql_adopciones = "SELECT COUNT(*) AS total FROM solicitud_adopcion WHERE MONTH(fecha_solicitud) = MONTH(CURDATE()) AND YEAR(fecha_solicitud) = YEAR(CURDATE())";
+$adopciones_mes = $conn->query($sql_adopciones)->fetch_assoc()['total'];
 
 // 4. CONSULTA PARA LA TABLA DE PRÓXIMAS CITAS (Trae las 4 más cercanas)
-$sql_lista_citas = "SELECT c.id_cita, c.fecha_hora, c.motivo, m.nombre AS nombre_mascota, m.foto 
-                    FROM citas c 
-                    INNER JOIN mascotas m ON c.id_mascota = m.id_mascota 
-                    WHERE c.fecha_hora >= NOW() 
-                    ORDER BY c.fecha_hora ASC 
+$sql_lista_citas = "SELECT c.consulta_veterinaria_id AS id_cita, c.fecha_consulta AS fecha_hora, c.diagnostico AS motivo, m.nombre AS nombre_mascota, m.foto
+                    FROM consulta_veterinaria c
+                    INNER JOIN mascota m ON c.mascota_id = m.mascota_id
+                    WHERE c.fecha_consulta >= NOW()
+                    ORDER BY c.fecha_consulta ASC
                     LIMIT 4";
-$resultado_citas = $conexion->query($sql_lista_citas);
+$resultado_citas = $conn->query($sql_lista_citas);
 
 // 5. CONSULTA PARA EL SELECT DEL FORMULARIO (Todas las mascotas)
-$sql_select_mascotas = "SELECT id_mascota, nombre, foto FROM mascotas ORDER BY nombre ASC";
-$resultado_mascotas = $conexion->query($sql_select_mascotas);
+$sql_select_mascotas = "SELECT mascota_id, nombre, foto FROM mascota ORDER BY nombre ASC";
+$resultado_mascotas = $conn->query($sql_select_mascotas);
 ?>
 
 <!DOCTYPE html>
@@ -45,6 +45,7 @@ $resultado_mascotas = $conexion->query($sql_select_mascotas);
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>MonPet - Panel Veterinario</title>
     <link rel="stylesheet" href="../assets/css/estilo_panel_veterinario.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
 </head>
 <body>
 
@@ -70,7 +71,7 @@ $resultado_mascotas = $conexion->query($sql_select_mascotas);
             <!-- [PHP: BUSCADOR] Este formulario enviará la palabra clave por GET (ej. buscar.php?busqueda=Buddy)
                  para hacer una consulta con LIKE en la base de datos de mascotas, historias o refugios. -->
             <form action="buscar.php" method="GET" class="formulario-busqueda">
-                <span class="icono-buscar">🔍</span>
+                <i class="fa-solid fa-magnifying-glass"></i>
                 <input type="search" name="busqueda" class="campo-busqueda" placeholder="Buscar mascota, historia o refugio...">
             </form>
         </div>
@@ -79,7 +80,7 @@ $resultado_mascotas = $conexion->query($sql_select_mascotas);
         <div class="acciones-usuario">
             <!-- [PHP: NOTIFICACIONES] Opcional: Consultar si hay notificaciones sin leer para mostrar un punto rojo o contador -->
             <button type="button" class="boton-notificaciones" aria-label="Notificaciones">
-                🔔
+                <i class="fa-solid fa-bell"></i>
             </button>
 
             <!-- [PHP: DATOS DEL USUARIO LOGUEADO] Imprimir desde $_SESSION la foto, 
@@ -113,49 +114,64 @@ $resultado_mascotas = $conexion->query($sql_select_mascotas);
                          para poner la clase 'activo' según la página actual. -->
                     <li class="item-menu activo">
                         <a href="index.php" class="enlace-menu">
-                            <span class="icono-menu">🏠</span>
+                            <span class="icono-menu">
+                                <i class="fa-solid fa-house"></i></span>
                             <span class="texto-menu">Inicio</span>
                         </a>
                     </li>
                     <li class="item-menu">
                         <a href="citas.php" class="enlace-menu">
-                            <span class="icono-menu">📅</span>
+                            <span class="icono-menu">
+                                <i class="fa-solid fa-calendar"></i>
+                            </span>
                             <span class="texto-menu">Citas veterinarias</span>
                         </a>
                     </li>
                     <li class="item-menu">
                         <a href="historias.php" class="enlace-menu">
-                            <span class="icono-menu">📋</span>
+                            <span class="icono-menu">
+                                <i class="fa-solid fa-file-lines"></i>
+                            </span>
                             <span class="texto-menu">Historias clinicas</span>
                         </a>
                     </li>
                     <li class="item-menu">
                         <a href="actualizar_salud.php" class="enlace-menu">
-                            <span class="icono-menu">🩺</span>
+                            <span class="icono-menu">
+                                <i class="fa-solid fa-stethoscope"></i>
+                            </span>
                             <span class="texto-menu">Actualizar salud</span>
                         </a>
                     </li>
                     <li class="item-menu">
                         <a href="jornadas.php" class="enlace-menu">
-                            <span class="icono-menu">🏥</span>
+                            <span class="icono-menu">
+                                <i class="fa-solid fa-hospital"></i>
+                            </span>
                             <span class="texto-menu">Jornadas</span>
                         </a>
                     </li>
                     <li class="item-menu">
                         <a href="mascotas.php" class="enlace-menu">
-                            <span class="icono-menu">🐾</span>
+                            <span class="icono-menu">
+                                <i class="fa-solid fa-paw"></i>
+                            </span>
                             <span class="texto-menu">Mascotas</span>
                         </a>
                     </li>
                     <li class="item-menu">
                         <a href="reportes.php" class="enlace-menu">
-                            <span class="icono-menu">📊</span>
+                            <span class="icono-menu">
+                                <i class="fa-solid fa-chart-bar"></i>
+                            </span>
                             <span class="texto-menu">Reportes</span>
                         </a>
                     </li>
                     <li class="item-menu">
                         <a href="mensajes.php" class="enlace-menu">
-                            <span class="icono-menu">✉️</span>
+                            <span class="icono-menu">
+                                <i class="fa-solid fa-envelope"></i>
+                            </span>
                             <span class="texto-menu">Mensajes</span>
                         </a>
                     </li>
@@ -175,7 +191,7 @@ $resultado_mascotas = $conexion->query($sql_select_mascotas);
                     <!-- [PHP: SALUDO DINÁMICO] Imprimir el nombre corto desde $_SESSION['nombre'] -->
                     <h1 class="titulo-bienvenida">¡Hola, Dra. Laura!</h1>
                     <p class="subtitulo-bienvenida">Gracias por ser parte de MonPet y ayudar a nuestras mascotas.</p>
-                    <a href="actividades.php" class="boton-actividades">Ver tus actividades →</a>
+                    <a href="/MonPet/MonPet-Veterinario/views/actividad_reciente.php" class="boton-actividades">Ver tus actividades →</a>
                 </div>
                 <div class="imagen-bienvenida">
                     <img src="ruta/perro-y-gato.jpg" alt="Perro y gato juntos" class="foto-banner">
@@ -189,7 +205,9 @@ $resultado_mascotas = $conexion->query($sql_select_mascotas);
             <section class="seccion-estadisticas">
                 <!-- Tarjeta 1: Total mascotas disponibles/en refugio -->
                 <article class="tarjeta-estadistica">
-                    <div class="icono-estadistica">🐾</div>
+                    <div class="icono-estadistica">
+                        <i class="fa-solid fa-paw"></i>
+                    </div>
                     <div class="datos-estadistica">
                         <span class="numero-estadistica"><?php echo $total_mascotas; ?></span>
                         <p class="etiqueta-estadistica">Mascotas en refugio</p>
@@ -198,7 +216,9 @@ $resultado_mascotas = $conexion->query($sql_select_mascotas);
 
                 <!-- Tarjeta 2: Total citas pendientes de esta veterinaria -->
                 <article class="tarjeta-estadistica">
-                    <div class="icono-estadistica">📅</div>
+                    <div class="icono-estadistica">
+                        <i class="fa-solid fa-calendar-days"></i>
+                    </div>
                     <div class="datos-estadistica">
                         <span class="numero-estadistica"><?php echo $total_citas; ?></span>
                         <p class="etiqueta-estadistica">Citas proximas</p>
@@ -207,19 +227,23 @@ $resultado_mascotas = $conexion->query($sql_select_mascotas);
 
                 <!-- Tarjeta 3: Total reportes médicos creados -->
                 <article class="tarjeta-estadistica">
-                    <div class="icono-estadistica">📄</div>
+                    <div class="icono-estadistica">
+                        <i class="fa-solid fa-file-medical"></i>
+                    </div>
                     <div class="datos-estadistica">
                         <span class="numero-estadistica"><?php echo $total_reportes; ?></span>
-                        <p class="etiqueta-estadistica">Reportes medicos</p>
+                        <p class="etiqueta-estadistica">Consultas medicas</p>
                     </div>
                 </article>
 
                 <!-- Tarjeta 4: Total adopciones filtradas por el mes actual (MONTH(fecha) = MONTH(CURRENT_DATE)) -->
                 <article class="tarjeta-estadistica">
-                    <div class="icono-estadistica">🤍</div>
+                    <div class="icono-estadistica">
+                        <i class="fa-solid fa-heart"></i>
+                    </div>
                     <div class="datos-estadistica">
                         <span class="numero-estadistica"><?php echo $adopciones_mes; ?></span>
-                        <p class="etiqueta-estadistica">Adopciones este mes</p>
+                        <p class="etiqueta-estadistica">Solicitudes de adopcion este mes</p>
                     </div>
                 </article>
             </section>
@@ -231,7 +255,7 @@ $resultado_mascotas = $conexion->query($sql_select_mascotas);
                 <!-- Columna Izquierda: Tabla de Mis próximas citas -->
                 <section class="tarjeta-panel panel-citas">
                     <div class="cabecera-panel">
-                        <h2 class="titulo-panel">🕒 Mis próximas citas</h2>
+                        <h2 class="titulo-panel"><i class="fa-solid fa-clock"></i> Mis próximas citas</h2>
                         <a href="citas.php" class="boton-ver-todas">Ver todas →</a>
                     </div>
 
