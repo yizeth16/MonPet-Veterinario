@@ -1,4 +1,5 @@
 <?php
+require_once __DIR__ . '/../controllers/cargar_preferencias.php';
 require_once __DIR__ . '/../controllers/perfil_veterinario_controller.php';
 
 function e($valor, $fallback = 'No disponible') {
@@ -20,7 +21,12 @@ function e($valor, $fallback = 'No disponible') {
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Rancho&display=swap" rel="stylesheet">
 </head>
-<body>
+<body 
+    data-perfil-id="<?= (int)$idPerfil ?>"
+    data-tema="<?= htmlspecialchars($temaActual, ENT_QUOTES, 'UTF-8') ?>"
+    data-tema-server="<?= htmlspecialchars($temaActual, ENT_QUOTES, 'UTF-8') ?>"
+    data-idioma-server="<?= htmlspecialchars($idiomaActual, ENT_QUOTES, 'UTF-8') ?>">
+
    <header class="topbar">
         <div class="marca-logo">
             <div class="circulo-logo">
@@ -124,8 +130,13 @@ function e($valor, $fallback = 'No disponible') {
                     <p><i class="fa-regular fa-folder-open"></i> No hay consultas recientes registradas aún.</p>
                 <?php endif; ?>
             </article>
-             <a href="configuracion.php" class="btn-configuracion">
-                <i class="fa-solid fa-gear" aria-hidden="true"></i> Configuración
+            <?php
+            $idActual = (int)($idVeterinario ?? $idPerfil ?? $_GET['id'] ?? $_SESSION['id_perfil'] ?? 0);
+            $urlConfiguracion = 'configuracion.php' . ($idActual > 0 ? '?id=' . urlencode((string)$idActual) : '');
+            ?>
+
+            <a href="<?= htmlspecialchars($urlConfiguracion, ENT_QUOTES, 'UTF-8') ?>" class="btn-configuracion">
+                <i class="fa-solid fa-gear" aria-hidden="true"></i> <span data-i18n="configuracion">Configuración</span>
             </a>
         </section>
     </main>

@@ -433,3 +433,16 @@ CREATE TABLE solicitud_archivo (
     CONSTRAINT fk_archivo_solicitud FOREIGN KEY (soli_adopcion_id)
       REFERENCES solicitud_adopcion(soli_adopcion_id) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB;
+
+CREATE TABLE configuracion_usuario (
+    id_configuracion INT AUTO_INCREMENT PRIMARY KEY,
+    id_perfil INT NOT NULL UNIQUE,
+    tema ENUM('claro', 'oscuro') NOT NULL DEFAULT 'claro',
+    idioma VARCHAR(5) NOT NULL DEFAULT 'es',
+    zona_horaria VARCHAR(50) NOT NULL DEFAULT 'America/Bogota',
+    notif_solicitudes TINYINT(1) NOT NULL DEFAULT 1,
+    notif_jornadas TINYINT(1) NOT NULL DEFAULT 1,
+    notif_mensajes TINYINT(1) NOT NULL DEFAULT 0,
+    notif_actualizaciones TINYINT(1) NOT NULL DEFAULT 1,
+    actualizado_en TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+)ENGINE=InnoDB;

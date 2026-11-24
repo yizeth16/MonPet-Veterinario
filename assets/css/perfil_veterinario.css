@@ -1,14 +1,14 @@
 :root {
-    --verde-oscuro: #216e66;       
-    --verde-medio: #38887f;       
-    --verde-suave: #a6cfc8;        
-    --verde-claro-hover: #cbe3df;  
-    --fondo-general: #f2f6f5;      
-    --blanco: #ffffff;
-    --texto-principal: #1e423e;
-    --texto-secundario: #5a7874;
-    --borde-suave: #cde0dd;
-    --sombra-tarjeta: 0 4px 12px rgba(33, 110, 102, 0.08);
+    --verde-oscuro: #287c73;
+    --verde-medio: #3b998e;
+    --verde-suave: #a3d4ce;
+    --verde-claro-hover: #d6ece9;
+    --fondo-general: #f2f9f8;
+    --blanco: #eef9f7;
+    --texto-principal: #246861;
+    --texto-secundario: #4d8882;
+    --borde-suave: #8ec7c0;
+    --sombra-tarjeta: 0 4px 12px rgba(40, 124, 115, 0.10);
     --radio: 16px;
 }
 
@@ -77,13 +77,13 @@ body {
 
 .btn-volver,
 .btn-configuracion {
-        display: inline-flex;
+    display: inline-flex;
     align-items: center;
     justify-content: center;
     gap: 6px;
     text-decoration: none;
     font-weight: 600;
-    font-size: 0.9rem;
+    font-size: 1.2rem;
     border-radius: 10px;
     transition: background-color 0.2s ease, transform 0.15s ease;
 }

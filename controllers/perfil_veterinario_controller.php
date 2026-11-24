@@ -4,7 +4,7 @@ if (session_status() === PHP_SESSION_NONE) {
 }
 
 // Conexion a la base de datos
-require_once __DIR__ . '/../configuracion/conexion.php';
+require_once __DIR__ . '/../configuracion/conexion_ejemplo.php';
 
 if (!isset($conexion) && isset($conn)) {
     $conexion = $conn;

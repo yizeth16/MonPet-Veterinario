@@ -1,1 +1,0 @@
-// Scripts y validaciones del módulo veterinario de MonPet
