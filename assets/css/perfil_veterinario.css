@@ -1,30 +1,3 @@
-:root {
-    --verde-oscuro: #287c73;
-    --verde-medio: #3b998e;
-    --verde-suave: #a3d4ce;
-    --verde-claro-hover: #d6ece9;
-    --fondo-general: #f2f9f8;
-    --blanco: #eef9f7;
-    --texto-principal: #246861;
-    --texto-secundario: #4d8882;
-    --borde-suave: #8ec7c0;
-    --sombra-tarjeta: 0 4px 12px rgba(40, 124, 115, 0.10);
-    --radio: 16px;
-}
-
-* {
-    box-sizing: border-box;
-    margin: 0;
-    padding: 0;
-}
-
-body {
-    font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-    background-color: var(--fondo-general);
-    color: var(--texto-principal);
-    line-height: 1.5;
-}
-
 /* Barra superior */
 .topbar {
     background-color: var(--blanco);

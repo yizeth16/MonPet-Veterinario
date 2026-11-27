@@ -10,30 +10,26 @@ function e($valor, $fallback = 'No disponible') {
 }
 ?>
 <!DOCTYPE html>
-<html lang="es">
+<html lang="<?= e($idiomaActual, 'es') ?>" class="tema-<?= e($temaActual, 'claro') ?>" data-tema="<?= e($temaActual, 'claro') ?>">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Perfil Profesional - MonPet</title>
+    <title>Perfil Profesional - MonVet</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="../assets/css/perfil_veterinario.css">
+    <link rel="stylesheet" href="../assets/css/tema.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Rancho&display=swap" rel="stylesheet">
 </head>
-<body 
-    data-perfil-id="<?= (int)$idPerfil ?>"
-    data-tema="<?= htmlspecialchars($temaActual, ENT_QUOTES, 'UTF-8') ?>"
-    data-tema-server="<?= htmlspecialchars($temaActual, ENT_QUOTES, 'UTF-8') ?>"
-    data-idioma-server="<?= htmlspecialchars($idiomaActual, ENT_QUOTES, 'UTF-8') ?>">
-
+<body class="tema-<?= e($temaActual, 'claro') ?>" data-tema="<?= e($temaActual, 'claro') ?>">
    <header class="topbar">
         <div class="marca-logo">
             <div class="circulo-logo">
                 <i class="fa-solid fa-paw icono-huella" aria-hidden="true"></i>
             </div>
             <div class="texto-logo">
-                <span class="titulo-logo">MonPet</span>
+                <span class="titulo-logo">MonVet</span>
                 <span class="subtitulo-logo">Amor que cambia vidas</span>
             </div>
         </div>
