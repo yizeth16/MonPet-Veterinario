@@ -802,7 +802,7 @@ textarea {
 .btn-guardar {
     background: linear-gradient(135deg, var(--verde-medio), var(--verde-oscuro));
     border: none;
-    color: var(--blanco-puro);
+    color: var(--blanco);
     padding: 10px 22px;
     border-radius: 10px;
     font-size: 14px;

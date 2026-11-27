@@ -1,5 +1,5 @@
 <?php
-require_once 'conexion_ejemplo.php';
+require_once '../configuracion/conexion_ejemplo.php';
 
 // IDs de prueba (en producción vendrán por $_GET['mascota_id'] y $_SESSION['veterinario_id'])
 $mascota_id = isset($_GET['mascota_id']) ? intval($_GET['mascota_id']) : 1;
@@ -7,7 +7,7 @@ $veterinario_id = 1;
 
 // 1. Consultar datos de la veterinaria
 $sqlVet = "SELECT nombre FROM veterinario WHERE veterinario_id = ?";
-$stmtVet = $conexion->prepare($sqlVet);
+$stmtVet = $conn->prepare($sqlVet);
 $stmtVet->bind_param("i", $veterinario_id);
 $stmtVet->execute();
 $veterinaria = $stmtVet->get_result()->fetch_assoc();
@@ -21,7 +21,7 @@ $sqlMascota = "SELECT m.mascota_id, m.nombre, m.fecha_nacimiento, m.foto,
                LEFT JOIN especie e ON ra.id_especie = e.id_especie
                LEFT JOIN refugio r ON m.nit = r.nit
                WHERE m.mascota_id = ?";
-$stmtM = $conexion->prepare($sqlMascota);
+$stmtM = $conn->prepare($sqlMascota);
 $stmtM->bind_param("i", $mascota_id);
 $stmtM->execute();
 $mascota = $stmtM->get_result()->fetch_assoc();
@@ -42,7 +42,7 @@ $sqlHistorial = "SELECT consulta_veterinaria_id, fecha_consulta, estado_salud, p
                  FROM consulta_veterinaria
                  WHERE mascota_id = ?
                  ORDER BY fecha_consulta DESC";
-$stmtH = $conexion->prepare($sqlHistorial);
+$stmtH = $conn->prepare($sqlHistorial);
 $stmtH->bind_param("i", $mascota_id);
 $stmtH->execute();
 $resultadoHistorial = $stmtH->get_result();
@@ -71,7 +71,7 @@ if (!empty($historial) && !empty($historial[0]['peso_actual'])) {
     <title>MonPet - Actualizar Salud</title>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
     <script src="https://unpkg.com/@phosphor-icons/web"></script>
-    <link rel="stylesheet" href="estilos_salud.css">
+    <link rel="stylesheet" href="../assets/css/estilo_actualizar_salud.css">
 </head>
 <body>
 

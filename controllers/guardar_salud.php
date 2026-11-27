@@ -1,6 +1,6 @@
 <?php
 header('Content-Type: application/json; charset=utf-8');
-require_once 'conexion_ejemplo.php';
+require_once '../configuracion/conexion_ejemplo.php';
 
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     http_response_code(405);
@@ -87,7 +87,7 @@ $sql = "INSERT INTO consulta_veterinaria (
             ruta_archivo, nombre_archivo_original
         ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
-$stmt = $conexion->prepare($sql);
+$stmt = $conn->prepare($sql);
 
 if (!$stmt) {
     echo json_encode(["exito" => false, "mensaje" => "Error en la consulta SQL: " . $conexion->error]);
@@ -129,5 +129,5 @@ if ($stmt->execute()) {
 }
 
 $stmt->close();
-$conexion->close();
+$conn->close();
 ?>
