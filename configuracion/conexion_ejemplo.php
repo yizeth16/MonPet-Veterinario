@@ -1,6 +1,6 @@
 <?php
 
-$host = "127.0.0.1";
+$host = "Localhost";
 $usuario = "root";
 $password = "";          
 $base_datos = "monpet";
